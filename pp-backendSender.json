@@ -1,0 +1,17 @@
+{
+  "Customers": [
+    {
+      "id": 11122,
+      "acctHolderName": "abhi",
+      "clearBalance": 55000,
+      "currency": "INR"
+    },
+    {
+      "id": 11123,
+      "acctHolderName": "abhishek",
+      "clearBalance": 5504,
+      "currency": "INR"
+    }
+
+  ]
+}
