@@ -1,53 +1,50 @@
 import axios from "axios";
-import React from "react"
-class Form extends React.Component{
+import Customer from "./Customer"
+const { useState, useEffect } = require("react");
 
-    state = { userName : "" }
-    // handleOnChange = async (event) => {
-    //     event.preventDefault();
-    //     this.setState( { userName : event.target.value })
-    //     const lengthOfName = this.state.userName.length
-    //     // console.log( this.state.userName+" "+lengthOfName)
-    //     if( lengthOfName === 2 ){
-    //         const resp = await
-    //         axios.get(`http://api.github.com/users/${this.state.userName}`);
-    //         console.log(resp.data)
-    //         if( this.state.userName === resp.data.login ){
-    //             this.props.onComplete(resp.data)
-    //             // this.setState({userName: ""})
-    //         }
-    //     }
-        
-        
-    // }
-    handleSubmit = async (event) =>{
-        event.preventDefault();
-        const resp = await 
-        axios.get(`http://localhost:8080/Customers/${this.state.userName}`);
-        this.props.onSubmit(resp.data)
-        this.setState({userName: ""})
-    }
-    
-    render(){
-        const mystyle = {
-            border:"1px solid grey",
-            backgroundColor:"lightgrey",
-            padding:"15px"
+function Form(props){
+
+    const [customerId,setCustomerId] = useState("")
+    const [custDetails,setCustDetails] = useState({})
+    const [custIdNotFound,setCustIdNotFound] = useState(null)
+    useEffect( () => {
+        const lengthOfCustomerId = customerId.length
+        if( lengthOfCustomerId === 5){
+            axios.get(`http://localhost:8080/Customers/${customerId}`)
+            .then((res) => { 
+                setCustDetails(res.data) 
+                setCustIdNotFound(null)
+            })
+            .catch(err => { 
+                setCustDetails({})
+                setCustIdNotFound("Customer ID Not Found ")
+            })
         }
-        return (
-            <div style={mystyle}>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" placeholder="User Name"
-                    // value attribute basically has the control and 
-                    // to see the characters we update the state using onChange event
-                    value={this.state.userName} 
-                    // this.handleOnChange
-                    onChange={event => this.setState({userName : event.target.value})} />
-                    <button>Add User</button>
-                </form>
-            </div>
-
-        )
+        else{
+            if( lengthOfCustomerId > 0){
+            setCustIdNotFound("Please enter 5 digits Customer ID")
+            }
+            setCustDetails({})
+        }
+    },[customerId])
+    const handleWithCustId = (event) => {
+        event.preventDefault()
+        setCustomerId(event.target.value)
     }
+    useEffect(()=>{props.receiveCustData(custDetails)},[custDetails])
+    return (
+        <>
+        <div >
+            <input type="text" placeholder="Customer ID"
+            // value attribute basically has the control and 
+                // to see the characters we update the state using onChange event
+                value={customerId} 
+                onChange={handleWithCustId} />
+                { custIdNotFound && <p>{custIdNotFound}</p>}
+        </div>
+        <Customer custDetails ={custDetails}/>
+        <hr/>
+        </>
+    )
 }
 export default Form;
