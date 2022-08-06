@@ -1,31 +1,20 @@
-// import logo from './logo.svg';
-import React from 'react';
+import { useState } from 'react';
 import './App.css';
-import CardList from "./Card";
-import Form from "./Form";
-// import testData from "./Card";
-
-class App extends React.Component{
-  state={
-    profiles:[]
+import Form from './components/Form';
+import Transfer from './components/Transfer';
+function App() {
+  const [customer,setCustomer] = useState(null)
+  function receiveCustData(selectedCustomer){
+    // console.log(selectedCustomer)
+    setCustomer(selectedCustomer)
   }
-  addNewProfile = (profileData) => {
-    console.log(profileData)
-
-    this.setState({
-      profiles: [profileData]
-    })
-  }
-
-  render(){
   return (
-    <div className="App">
-      <Form onSubmit={this.addNewProfile} />
-      {/* onComplete={this.addNewProfile} */}
-      <CardList profiles={this.state.profiles}/>
+    <div>
+      <h1>!! Welcome !!</h1>
+      <Form receiveCustData = {receiveCustData}/>
+      <Transfer {...customer}/>
     </div>
   );
-}
 }
 
 export default App;
